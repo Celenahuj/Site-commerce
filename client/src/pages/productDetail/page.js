@@ -12,6 +12,12 @@ let M = {
   currentProduct: null
 };
 
+const resolveImageUrl = function (value) {
+  if (!value) return '/placeholder.png';
+  if (value.startsWith('http://') || value.startsWith('https://')) return value;
+  return `/${value}`;
+};
+
 M.getProductById = function (id) {
   return M.products.find((product) => product.id == id);
 };
@@ -21,7 +27,7 @@ M.getImagesByProductId = function (id) {
   for (let i = 0; i < M.productImages.length; i++) {
     let img = M.productImages[i];
     if (img.product_id == id) {
-      img.src = "/" + img.name;
+      img.src = resolveImageUrl(img.name);
       images.push(img);
     }
   }
@@ -40,7 +46,7 @@ C.handler_clickOnProduct = async function (ev) {
         id: M.currentProduct.id,
         name: M.currentProduct.name,
         description: M.currentProduct.description || '',
-        image: M.currentProduct.image ? `/${M.currentProduct.image}` : '/placeholder.png',
+        image: resolveImageUrl(M.currentProduct.image),
         price: parseFloat(M.currentProduct.price) || 0
       });
       

@@ -11,6 +11,13 @@ let M = {
     products: [],
     user: null
 };
+
+const resolveImageUrl = function (value) {
+    if (!value) return '/placeholder.png';
+    if (value.startsWith('http://') || value.startsWith('https://')) return value;
+    return `/${value}`;
+};
+
 let C = {};
 
 // Gestion du clic sur un produit
@@ -32,7 +39,7 @@ C.handler_clickOnProduct = async function(ev){
                 id: product.id,
                 name: product.name,
                 description: product.description || '',
-                image: product.image ? `/${product.image}` : '/placeholder.png',
+                image: resolveImageUrl(product.image),
                 price: parseFloat(product.price) || 0
             });
             

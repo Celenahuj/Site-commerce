@@ -10,9 +10,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://mmi.unilim.fr/~hujol3/SAE301',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        secure: false,
+        secure: false
       }
     }
   }

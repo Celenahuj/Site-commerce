@@ -20,8 +20,32 @@ abstract class EntityRepository {
     protected $cnx;
 
     protected function __construct(){
-        // Modifiez ici vos informations de BDD et de connexion
-        $this->cnx = new PDO("mysql:host=127.0.0.1:3306;dbname=hujol3", "hujol3", "hujol3");
+        // Force AlwaysData database usage for this project.
+        $host = 'mysql-hujol.alwaysdata.net';
+        $port = '3306';
+        $name = 'hujol_sae203';
+        $user = 'hujol';
+        $pass = 'souriscalin7C!';
+
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+        ];
+
+        $portsToTry = [$port];
+
+        $lastException = null;
+        foreach ($portsToTry as $currentPort) {
+            try {
+                $dsn = "mysql:host={$host};port={$currentPort};dbname={$name};charset=utf8mb4";
+                $this->cnx = new PDO($dsn, $user, $pass, $options);
+                return;
+            } catch (PDOException $e) {
+                $lastException = $e;
+            }
+        }
+
+        throw $lastException;
     }
 
     /**

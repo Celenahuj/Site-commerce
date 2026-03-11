@@ -155,7 +155,7 @@ class Product extends Entity {
      *
      * @return  self
      */
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
         return $this;
@@ -173,7 +173,7 @@ class Product extends Entity {
      *
      * @return  self
      */
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
         return $this;
@@ -187,7 +187,7 @@ class Product extends Entity {
     }
 
 
-    public function setCalories(int $calories): self
+    public function setCalories(?int $calories): self
     {
         $this->calories = $calories;
         return $this;
@@ -201,7 +201,7 @@ class Product extends Entity {
         return $this->allergens;
     }   
 
-    public function setAllergens(string $allergens): self
+    public function setAllergens(?string $allergens): self
     {
         $this->allergens = $allergens;
         return $this;
