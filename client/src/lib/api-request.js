@@ -5,7 +5,7 @@
 
 let API_URL = import.meta.env.DEV 
     ? "/api/" 
-    : "https://mmi.unilim.fr/~hujol3/SAE301/api/";
+    : (import.meta.env.VITE_API_URL || "https://mmi.unilim.fr/~hujol3/SAE301/api/");
 /**
  *  getRequest
  * 

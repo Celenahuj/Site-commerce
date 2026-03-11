@@ -1,3 +1,16 @@
+const normalizeBasePath = function (path) {
+    if (!path || path === "/") return "/";
+    return `/${path.replace(/^\/+|\/+$/g, "")}/`;
+};
+
+const BASE_PATH = normalizeBasePath(import.meta.env.BASE_URL || "/");
+
+const prefixRootRelativeUrl = function (url) {
+    if (!url || !url.startsWith("/")) return url;
+    if (BASE_PATH === "/") return url;
+    if (url.startsWith(BASE_PATH)) return url;
+    return `${BASE_PATH}${url.replace(/^\/+/, "")}`;
+};
 
 
 
@@ -13,6 +26,12 @@ let genericRenderer = function(template, data){
     for(let key in data){
         html = html.replaceAll(new RegExp("{{"+key+"}}", "g"), data[key]);
     }
+
+    // Prefix root-relative URLs so templates work under /Site-commerce/ on GitHub Pages.
+    html = html.replace(/(src|href)\s*=\s*(["'])(\/[^"']*)\2/g, (match, attr, quote, url) => {
+        return `${attr}=${quote}${prefixRootRelativeUrl(url)}${quote}`;
+    });
+
     return html;
 }
 
