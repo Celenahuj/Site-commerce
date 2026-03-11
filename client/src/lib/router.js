@@ -139,7 +139,9 @@ class Router {
   
   // Naviguer vers une route
   navigate(path) {
-    window.history.pushState(null, null, this.withBasePath(path));
+    // Strip basePath first to avoid double basePath (e.g. when utils.js already prefixed the href)
+    const stripped = this.stripBasePath(path);
+    window.history.pushState(null, null, this.withBasePath(stripped));
     this.handleRoute();
   }
   
