@@ -1,12 +1,22 @@
 import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 
-export default defineConfig({
+const indexHtml = fileURLToPath(new URL("./index.html", import.meta.url));
+const notFoundHtml = fileURLToPath(new URL("./404.html", import.meta.url));
+
+export default defineConfig(({ command }) => ({
   build: {
     target: "esnext", //browsers can handle the latest ES features
+    rollupOptions: {
+      input: {
+        main: indexHtml,
+        notFound: notFoundHtml,
+      },
+    },
   },
   plugins: [tailwindcss()],
-  base: "/",
+  base: command === "build" ? "/Site-commerce/" : "/",
   server: {
     proxy: {
       '/api': {
@@ -16,4 +26,4 @@ export default defineConfig({
       }
     }
   }
-});
+}));

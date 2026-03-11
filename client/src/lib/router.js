@@ -15,17 +15,50 @@ class Router {
     this.currentRoute = null;
     this.isAuthenticated = false;
     this.loginPath = options.loginPath || '/login';
+    this.basePath = this.normalizeBasePath(options.basePath || '/');
     
     // Écouter les changements d'URL
     window.addEventListener('popstate', () => this.handleRoute());
     
     // Intercepter les clics sur les liens
     document.addEventListener('click', (e) => {
-      if (e.target.matches('[data-link]')) {
+      const link = e.target.closest('[data-link]');
+      if (link) {
         e.preventDefault();
-        this.navigate(e.target.getAttribute('href'));
+        this.navigate(link.getAttribute('href'));
       }
     });
+  }
+
+  normalizeBasePath(path) {
+    if (!path || path === '/') return '/';
+    const trimmedPath = path.replace(/^\/+|\/+$/g, '');
+    return `/${trimmedPath}/`;
+  }
+
+  stripBasePath(path) {
+    if (this.basePath === '/') {
+      return path || '/';
+    }
+
+    if (path.startsWith(this.basePath)) {
+      const strippedPath = path.slice(this.basePath.length - 1);
+      return strippedPath || '/';
+    }
+
+    return path || '/';
+  }
+
+  withBasePath(path) {
+    if (!path) return this.basePath;
+    if (/^https?:\/\//.test(path)) return path;
+
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    if (this.basePath === '/') {
+      return normalizedPath;
+    }
+
+    return `${this.basePath.slice(0, -1)}${normalizedPath}`;
   }
   
   // Définir l'état d'authentification
@@ -106,13 +139,13 @@ class Router {
   
   // Naviguer vers une route
   navigate(path) {
-    window.history.pushState(null, null, path);
+    window.history.pushState(null, null, this.withBasePath(path));
     this.handleRoute();
   }
   
   // Gérer la route actuelle
   handleRoute() {
-    const path = window.location.pathname;
+    const path = this.stripBasePath(window.location.pathname);
     
     // Trouver la route correspondante
     for (const route of this.routes) {

@@ -13,7 +13,10 @@ import { The404Page } from "./pages/404/page.js";
 import { AuthData } from './data/auth.js';
 
 
-const router = new Router('app', { loginPath: '/login' });
+const router = new Router('app', {
+  loginPath: '/login',
+  basePath: import.meta.env.BASE_URL,
+});
 
 window.router = router;
 
