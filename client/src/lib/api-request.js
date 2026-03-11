@@ -5,7 +5,11 @@
 
 let API_URL = import.meta.env.DEV 
     ? "/api/" 
-    : (import.meta.env.VITE_API_URL || "https://mmi.unilim.fr/~hujol3/SAE301/api/");
+    : (import.meta.env.VITE_API_URL || "");
+
+if (!import.meta.env.DEV && !API_URL) {
+    console.error("VITE_API_URL is missing for production build. Configure it to your AlwaysData API base URL.");
+}
 /**
  *  getRequest
  * 
