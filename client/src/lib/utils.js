@@ -42,8 +42,12 @@ let genericRenderer = function(template, data){
  * @returns {DocumentFragment} - A DocumentFragment containing the parsed HTML elements.
  */
 function htmlToFragment(htmlString) {
+    const normalizedHtml = htmlString.replace(/(src|href)\s*=\s*(["'])(\/[^"']*)\2/g, (match, attr, quote, url) => {
+        return `${attr}=${quote}${prefixRootRelativeUrl(url)}${quote}`;
+    });
+
     const template = document.createElement('template');
-    template.innerHTML = htmlString.trim(); // trim supprime les espaces inutiles
+    template.innerHTML = normalizedHtml.trim(); // trim supprime les espaces inutiles
     return template.content;
 }
 
